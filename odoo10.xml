@@ -1,0 +1,102 @@
+<templateSet group="odoo10">
+  <template name="manifest" value="# -*- coding: utf-8 -*-&#10;{&#10;    'name': '$name$',&#10;    'version': '1.0',&#10;    'summary': '$summary$',&#10;    'sequence': 30,&#10;    'description': &quot;&quot;&quot;&#10;    &quot;&quot;&quot;,&#10;    'category': '$category$',&#10;    'website': 'http://www.$website$.com',&#10;    'depends': ['base_setup', 'website'],&#10;    'data': [&#10;        'security/$name$_security.xml',&#10;        'security/ir.model.access.csv',&#10;        #'data/_data.xml',&#10;        #'views/_view.xml',&#10;        #'wizard/_view.xml',&#10;    ],&#10;    'demo': [],&#10;    'qweb': [&#10;        #'static/src/xml/.xml',&#10;    ],&#10;    'installable': True,&#10;    'application': True,&#10;    'auto_install': False,&#10;}" toReformat="false" toShortenFQNames="true">
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="summary" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="category" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="website" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="imports" value="# -*- coding: utf-8 -*-&#10;from odoo.osv import expression&#10;from odoo.tools.float_utils import float_round as round&#10;from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT&#10;from odoo.exceptions import UserError, ValidationError&#10;from odoo import api, fields, models, _" toReformat="false" toShortenFQNames="true">
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="model" value="class $ClassName$(models.Model):&#10;    _name = '$model$'&#10;    _description = '$description$'&#10;    #_order = ''&#10;    &#10;    name = fields.Char(string='$name$', required=True)&#10;    &#10;    @api.one&#10;    @api.returns('self', lambda value: value.id)&#10;    def copy(self, default=None):&#10;        default = dict(default or {}, name=_('%s (Copy)') % self.name)&#10;        return super($ClassName$, self).copy(default=default)" toReformat="false" toShortenFQNames="true">
+    <variable name="ClassName" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="model" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="description" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="inherit" value="class $ClassName$(models.Model):&#10;    _inherit = '$model$'" toReformat="false" toShortenFQNames="true">
+    <variable name="ClassName" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="model" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="name_search" value="@api.model&#10;def name_search(self, name, args=None, operator='ilike', limit=80):&#10;    args = args or []&#10;    domain = []&#10;    if name:&#10;        domain = ['|', ('name', operator, name), ('$field2$', operator, name)]&#10;        if operator in expression.NEGATIVE_TERM_OPERATORS:&#10;            domain = ['&amp;', '!'] + domain[1:]&#10;    $ids$ = self.search(domain + args, limit=limit)&#10;    return $ids$.name_get()" toReformat="false" toShortenFQNames="true">
+    <variable name="field2" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="ids" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="onchange" value="@api.onchange('$field$')&#10;def onchange_$field$(self):&#10;    if self.$state$ in ('a', 'b') and not self.$result$:&#10;        self.$result$ = self.$field$" toReformat="false" toShortenFQNames="true">
+    <variable name="field" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="state" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="result" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="fchar" value="$field$ = fields.Char(string='$label$', size=$size$, required=True)" toReformat="false" toShortenFQNames="true">
+    <variable name="field" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="label" expression="capitalize(String)" defaultValue="" alwaysStopAt="true" />
+    <variable name="size" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="fmany2one" value="$field$_id = fields.Many2one('$model$', string='$label$', ondelete='cascade', required=True)" toReformat="false" toShortenFQNames="true">
+    <variable name="field" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="model" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="label" expression="capitalize(String)" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="fone2many" value="$field$_id = field.One2many('$model$', '$field_pk$', string='$label$')" toReformat="false" toShortenFQNames="true">
+    <variable name="field" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="model" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="field_pk" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="label" expression="capitalize(String)" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="fmany2many" value="$field$_ids = fields.Many2many('$model$', '$relation$_rel', '$parent$', '$child$', string='$label$')" toReformat="false" toShortenFQNames="true">
+    <variable name="field" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="model" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="relation" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="parent" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="child" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="label" expression="capitalize(String)" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="fselection" value="$field$ = fields.Selection([&#10;    ('$value1$', '$description1$'), &#10;    ('$value2$', '$description2$')], string='$label$', default='$value1$')" toReformat="false" toShortenFQNames="true">
+    <variable name="field" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="label" expression="capitalize(String)" defaultValue="" alwaysStopAt="true" />
+    <variable name="description1" expression="capitalize(String)" defaultValue="" alwaysStopAt="true" />
+    <variable name="value2" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="description2" expression="capitalize(String)" defaultValue="" alwaysStopAt="true" />
+    <variable name="value1" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="name_get" value="@api.multi&#10;@api.depends('$name$', '$field$')&#10;def name_get(self):&#10;    res = []&#10;    for $n$ in self:&#10;        name = '%s (%s)' % ($n$.$name$, $n$.$field$)&#10;        res.append(($n$.id, name))&#10;    return res" toReformat="false" toShortenFQNames="true">
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="field" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="n" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+</templateSet>
