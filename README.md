@@ -2,4 +2,4 @@
 PyCharm Live Templates
 
 
-Copy to ~/.PyCharm<VERSION>/config/templates
+Copy to ~/.PyCharm&gt;VERSION&lt;/config/templates
