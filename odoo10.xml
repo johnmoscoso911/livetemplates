@@ -1,0 +1,227 @@
+<templateSet group="odoo10">
+  <template name="manifest" value="# -*- coding: utf-8 -*-&#10;{&#10;    'name': '$name$',&#10;    'version': '1.0',&#10;    'summary': '$summary$',&#10;    'sequence': 30,&#10;    'description': &quot;&quot;&quot;&#10;    &quot;&quot;&quot;,&#10;    'category': '$category$',&#10;    'website': 'http://www.$website$.com',&#10;    'depends': ['base_setup', 'website'],&#10;    'data': [&#10;        'security/$name$_security.xml',&#10;        'security/ir.model.access.csv',&#10;        #'data/_data.xml',&#10;        #'views/_view.xml',&#10;        #'wizard/_view.xml',&#10;    ],&#10;    'demo': [],&#10;    'qweb': [&#10;        #'static/src/xml/.xml',&#10;    ],&#10;    'installable': True,&#10;    'application': True,&#10;    'auto_install': False,&#10;}" toReformat="false" toShortenFQNames="true">
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="summary" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="category" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="website" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="imports" value="# -*- coding: utf-8 -*-&#10;from odoo.osv import expression&#10;from odoo.tools.float_utils import float_round as round&#10;from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT&#10;from odoo.exceptions import UserError, ValidationError&#10;from odoo import api, fields, models, _" toReformat="false" toShortenFQNames="true">
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="model" value="class $ClassName$(models.Model):&#10;    _name = '$model$'&#10;    _description = '$description$'&#10;    #_order = 'name'&#10;    &#10;    name = fields.Char(string='$name$', size=128, required=True)&#10;    &#10;    @api.one&#10;    @api.returns('self', lambda value: value.id)&#10;    def copy(self, default=None):&#10;        default = dict(default or {}, name=_('%s (Copy)') % self.name)&#10;        return super($ClassName$, self).copy(default=default)" toReformat="false" toShortenFQNames="true">
+    <variable name="ClassName" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="model" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="description" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="inherit" value="class $ClassName$(models.Model):&#10;    _inherit = '$model$'" toReformat="false" toShortenFQNames="true">
+    <variable name="ClassName" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="model" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="name_search" value="@api.model&#10;def name_search(self, name, args=None, operator='ilike', limit=80):&#10;    args = args or []&#10;    domain = []&#10;    if name:&#10;        domain = ['|', ('name', operator, name), ('$field2$', operator, name)]&#10;        if operator in expression.NEGATIVE_TERM_OPERATORS:&#10;            domain = ['&amp;', '!'] + domain[1:]&#10;    $ids$ = self.search(domain + args, limit=limit)&#10;    return $ids$.name_get()" toReformat="false" toShortenFQNames="true">
+    <variable name="field2" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="ids" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="onchange" value="@api.onchange('$field$')&#10;def onchange_$field$(self):&#10;    if self.$state$ in ('a', 'b') and not self.$result$:&#10;        self.$result$ = self.$field$" toReformat="false" toShortenFQNames="true">
+    <variable name="field" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="state" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="result" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="fchar" value="$field$ = fields.Char(string='$label$', size=$size$, required=True)" toReformat="false" toShortenFQNames="true">
+    <variable name="field" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="label" expression="capitalize(String)" defaultValue="" alwaysStopAt="true" />
+    <variable name="size" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="fmany2one" value="$field$_id = fields.Many2one('$model$', string='$label$', ondelete='cascade', required=True)" toReformat="false" toShortenFQNames="true">
+    <variable name="field" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="model" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="label" expression="capitalize(String)" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="fone2many" value="$field$_ids = fields.One2many('$model$', '$field_pk$_id', string='$label$')" toReformat="false" toShortenFQNames="true">
+    <variable name="field" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="model" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="field_pk" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="label" expression="capitalize(String)" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="fmany2many" value="$field$_ids = fields.Many2many('$model$', '$relation$_rel', '$parent$', '$child$', string='$label$')" toReformat="false" toShortenFQNames="true">
+    <variable name="field" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="model" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="relation" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="parent" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="child" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="label" expression="capitalize(String)" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="fselection" value="$field$ = fields.Selection([&#10;    ('$value1$', '$description1$'), &#10;    ('$value2$', '$description2$')], string='$label$', default='$value1$')" toReformat="false" toShortenFQNames="true">
+    <variable name="field" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="label" expression="capitalize(String)" defaultValue="" alwaysStopAt="true" />
+    <variable name="description1" expression="capitalize(String)" defaultValue="" alwaysStopAt="true" />
+    <variable name="value2" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="description2" expression="capitalize(String)" defaultValue="" alwaysStopAt="true" />
+    <variable name="value1" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="name_get" value="@api.multi&#10;@api.depends('$name$', '$field$')&#10;def name_get(self):&#10;    res = []&#10;    for $n$ in self:&#10;        name = '%s (%s)' % ($n$.$name$, $n$.$field$)&#10;        res.append(($n$.id, name))&#10;    return res" toReformat="false" toShortenFQNames="true">
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="field" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="n" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="newxml" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;&#10;&lt;odoo&gt;&#10;    &lt;data&gt;&#10;    &lt;/data&gt;&#10;&lt;/odoo&gt;" toReformat="false" toShortenFQNames="true">
+    <context>
+      <option name="XML" value="true" />
+    </context>
+  </template>
+  <template name="commonviews" value="&lt;!--TREE--&gt;&#10;&lt;record id=&quot;view_$id$_tree&quot; model=&quot;ir.ui.view&quot;&gt;&#10;    &lt;field name=&quot;name&quot;&gt;$model$.tree&lt;/field&gt;&#10;    &lt;field name=&quot;model&quot;&gt;$model$&lt;/field&gt;&#10;    &lt;field name=&quot;arch&quot; type=&quot;xml&quot;&gt;&#10;        &lt;tree string=&quot;$title$&quot;&gt;&#10;            &lt;field name=&quot;name&quot; /&gt;&#10;            &lt;!--field name=&quot;state&quot; invisible=&quot;1&quot; /--&gt;&#10;        &lt;/tree&gt;&#10;    &lt;/field&gt;&#10;&lt;/record&gt;&#10;&lt;!--FORM--&gt;&#10;&lt;record id=&quot;view_$id$_form&quot; model=&quot;ir.ui.view&quot;&gt;&#10;    &lt;field name=&quot;name&quot;&gt;$model$.form&lt;/field&gt;&#10;    &lt;field name=&quot;model&quot;&gt;$model$&lt;/field&gt;&#10;    &lt;field name=&quot;arch&quot; type=&quot;xml&quot;&gt;&#10;        &lt;form string=&quot;$title$&quot;&gt;&#10;            &lt;!--header&gt;&#10;                &lt;button name=&quot;&quot; type=&quot;object&quot; states=&quot;&quot; string=&quot;&quot; class=&quot;oe_highlight&quot; groups=&quot;&quot; /&gt;&#10;                &lt;field name=&quot;state&quot; widget=&quot;statusbar&quot; statusbar_visible=&quot;&quot; /&gt;&#10;            &lt;/header--&gt;&#10;            &lt;sheet&gt;&#10;                &lt;group col=&quot;$columns$&quot;&gt;&#10;                    &lt;field name=&quot;name&quot; colspan=&quot;$span$&quot; /&gt;&#10;                    &lt;separator string=&quot;&amp;#183;&quot; colspan=&quot;$span$&quot; /&gt;&#10;                &lt;/group&gt;&#10;                &lt;!--notebook&gt;&#10;                    &lt;page string=&quot;&quot;&gt;&#10;                        &lt;group&gt;&#10;                        &lt;/group&gt;&#10;                    &lt;/page&gt;&#10;                &lt;/notebook--&gt;&#10;            &lt;/sheet&gt;&#10;            &lt;!--div class=&quot;oe_chatter&quot;&gt;&#10;                &lt;field name=&quot;message_follower_ids&quot; widget=&quot;mail_followers&quot; /&gt;&#10;                &lt;field name=&quot;message_ids&quot; widget=&quot;mail_thread&quot; /&gt;&#10;            &lt;/div--&gt;&#10;        &lt;/form&gt;&#10;    &lt;/field&gt;&#10;&lt;/record&gt;&#10;&lt;!--SEARCH--&gt;&#10;&lt;record id=&quot;view_$id$_search&quot; model=&quot;ir.ui.view&quot;&gt;&#10;    &lt;field name=&quot;name&quot;&gt;$model$.search&lt;/field&gt;&#10;    &lt;field name=&quot;model&quot;&gt;$model$&lt;/field&gt;&#10;    &lt;field name=&quot;arch&quot; type=&quot;xml&quot;&gt;&#10;        &lt;search string=&quot;$title$&quot;&gt;&#10;            &lt;field name=&quot;name&quot; /&gt;&#10;            &lt;!--separator /&gt;&#10;            &lt;filter name=&quot;$filter$&quot; domain=&quot;[('user_id', '=', uid)]&quot; string=&quot;&quot; /--&gt;&#10;            &lt;group expand=&quot;0&quot; string=&quot;Group By&quot;&gt;&#10;                &lt;!--filter name=&quot;&quot; string=&quot;&quot; context=&quot;{'group_by': '$group$'}&quot; /--&gt;&#10;            &lt;/group&gt;&#10;        &lt;/search&gt;&#10;    &lt;/field&gt;&#10;&lt;/record&gt;" toReformat="false" toShortenFQNames="true">
+    <variable name="id" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="model" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="title" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="columns" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="span" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="filter" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="group" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="XML" value="true" />
+    </context>
+  </template>
+  <template name="action" value="&lt;!--ACTION--&gt;&#10;&lt;record id=&quot;action_$id$&quot; model=&quot;ir.actions.act_window&quot;&gt;&#10;    &lt;field name=&quot;name&quot;&gt;$title$&lt;/field&gt;&#10;    &lt;field name=&quot;res_model&quot;&gt;$model$&lt;/field&gt;&#10;    &lt;field name=&quot;view_type&quot;&gt;form&lt;/field&gt;&#10;    &lt;field name=&quot;view_mode&quot;&gt;tree,form,kanban,calendar,graph,pivot&lt;/field&gt;&#10;    &lt;!--field name=&quot;view_id&quot; ref=&quot;$view_id$&quot; /&gt;&#10;    &lt;field name=&quot;search_view_id&quot; ref=&quot;$search_view_id$&quot; /&gt;&#10;    &lt;field name=&quot;domain&quot;&gt;[('state', 'in', ['draft', 'cancel'])]&lt;/field&gt;&#10;    &lt;field name=&quot;context&quot;&gt;{'default_$field$': '$value$'}&lt;/field--&gt;&#10;    &lt;field name=&quot;help&quot; type=&quot;html&quot;&gt;&#10;        &lt;p class=&quot;oe_view_nocontent_create&quot;&gt;$help$&lt;/p&gt;&#10;        &lt;p&gt;&lt;/p&gt;&#10;    &lt;/field&gt;&#10;&lt;/record&gt;&#10;&lt;!--MENUITEM--&gt;&#10;&lt;menuitem action=&quot;action_$id$&quot; &#10;    id=&quot;menu_action_$id$&quot;&#10;    groups=&quot;base.group_user&quot; &#10;    parent=&quot;$parent$&quot;&#10;    sequence=&quot;$seq$&quot; /&gt;" toReformat="false" toShortenFQNames="true">
+    <variable name="id" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="title" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="model" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="view_id" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="search_view_id" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="field" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="value" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="help" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="parent" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="seq" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="XML" value="true" />
+    </context>
+  </template>
+  <template name="defcreate" value="@api.model&#10;def create(self, values):&#10;    a = values.get('$field$')&#10;    if a:&#10;        values.update({'$field$': a.upper()})&#10;    return super($classname$, self).create(values)" toReformat="false" toShortenFQNames="true">
+    <variable name="field" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="classname" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="sqlconst" value="_sql_constraints = [&#10;    ('$name$', '$constraint$', _('$message$')),&#10;    ('$field$_unique', 'unique($field$)', _('The $field$ must be unique!')),&#10;    ('$f2$_chk', 'check($f2$ &gt; 0)', _('The $f2$ must be grater than 0')),&#10;]" toReformat="false" toShortenFQNames="true">
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="constraint" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="message" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="field" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="f2" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="inheritview" value="&lt;record id=&quot;view_$id$_$kind$&quot; model=&quot;ir.ui.view&quot;&gt;&#10;    &lt;field name=&quot;name&quot;&gt;$name$.$kind$&lt;/field&gt;&#10;    &lt;field name=&quot;model&quot;&gt;$model$&lt;/field&gt;&#10;    &lt;field name=&quot;inherit_id&quot; ref=&quot;$inherit$&quot; /&gt;&#10;    &lt;field name=&quot;arch&quot; type=&quot;xml&quot;&gt;&#10;        &lt;div name=&quot;$opt$&quot; position=&quot;$inside$&quot;&gt;&#10;        &lt;/div&gt;&#10;        &lt;xpath expr=&quot;//page[@name='$page$']&quot; position=&quot;$after$&quot;&gt;&#10;        &lt;/xpath&gt;&#10;    &lt;/field&gt;&#10;&lt;/record&gt;" toReformat="false" toShortenFQNames="true">
+    <variable name="id" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="kind" expression="" defaultValue="form" alwaysStopAt="true" />
+    <variable name="model" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="inherit" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="opt" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="inside" expression="" defaultValue="inside" alwaysStopAt="true" />
+    <variable name="page" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="after" expression="" defaultValue="after" alwaysStopAt="true" />
+    <context>
+      <option name="XML" value="true" />
+    </context>
+  </template>
+  <template name="defwrite" value="@api.multi&#10;def write(self, values):&#10;    a = values.get('$field$')&#10;    if a:&#10;        values.update({'$field$': a.upper()})&#10;    return super($classname$, self).write(values)" toReformat="false" toShortenFQNames="true">
+    <variable name="field" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="classname" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="ftext" value="$field$ = fields.Text(string='$label$')" toReformat="false" toShortenFQNames="true">
+    <variable name="field" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="label" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="fint" value="$field$ = fields.Integer(string='$label$', required=True, default=0)" toReformat="false" toShortenFQNames="true">
+    <variable name="field" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="label" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="checkconstrains" value="@api.constrains('$field$')&#10;def _check_$field$(self):&#10;    if not self._check_recursion():&#10;        raise ValidationError(_('Error! You cannot create recursive $label$.'))" toReformat="false" toShortenFQNames="true">
+    <variable name="field" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="label" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="recorddata" value="&lt;record id=&quot;$id$&quot; model=&quot;$model$&quot;&gt;&#10;    &lt;field name=&quot;name&quot;&gt;$name$&lt;/field&gt;&#10;    &lt;field name=&quot;$field$&quot;&gt;$value$&lt;/field&gt;&#10;    &lt;field name=&quot;parent_id&quot; ref=&quot;$parent_id$&quot; /&gt;&#10;&lt;/record&gt;" toReformat="false" toShortenFQNames="true">
+    <variable name="id" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="model" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="field" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="value" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="parent_id" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="XML" value="true" />
+    </context>
+  </template>
+  <template name="ffloat" value="$field$ = fields.Float(string='$label$', digits=($digit$, $decimal$), required=True, default=0)" toReformat="false" toShortenFQNames="true">
+    <variable name="field" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="label" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="digit" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="decimal" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="fdate" value="$field$ = fields.Date(string='$label$', required=True, default=fields.Date.context_today)" toReformat="false" toShortenFQNames="true">
+    <variable name="field" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="label" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+  <template name="fdatetime" value="$field$ = fields.Datetime(string='$label$', required=True, default=fields.Datetime.now)" toReformat="false" toShortenFQNames="true">
+    <variable name="field" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="label" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python" value="true" />
+    </context>
+  </template>
+</templateSet>
