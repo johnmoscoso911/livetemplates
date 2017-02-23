@@ -35,6 +35,6 @@
 
 ```sh
 $ cd ~/.PyCharm<VERSION>/config/templates
-$ git clone https://johnmoscoso911@bitbucket.org/johnmoscoso911/pycharm-live-templates.git
+$ git clone https://github.com/johnmoscoso911/livetemplates.git
 $ git pull
 ```
